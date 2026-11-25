@@ -2,20 +2,26 @@ NAME = cub3D
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = src/main.c src/graphics.c src/cleanup.c \
-       src/events.c src/movement.c src/render.c src/cast.c src/ray.c \
-       src/textures.c src/texture_draw.c src/parse_map.c src/parse_config.c \
-       src/map.c src/utils.c src/gnl.c
+SCENE_SRCS = src/scene/gnl.c src/scene/map.c src/scene/parse_config.c
+SCENE_SRCS += src/scene/parse_map.c src/scene/utils.c src/scene/free_scene.c
+
+ENGINE_SRCS = src/engine/controls/events.c src/engine/controls/movement.c
+ENGINE_SRCS += src/engine/render/cast.c src/engine/render/ray.c
+ENGINE_SRCS += src/engine/render/render.c src/engine/render/texture_draw.c
+ENGINE_SRCS += src/engine/render/textures.c src/engine/platform/cleanup.c
+ENGINE_SRCS += src/engine/platform/graphics.c
+
+SRCS = src/main.c $(SCENE_SRCS) $(ENGINE_SRCS)
 OBJS = $(SRCS:.c=.o)
 
 ifeq ($(shell uname -s),Darwin)
-SRCS += src/mlx_context_mac.c
+ENGINE_SRCS += src/engine/platform/mlx_context_mac.c
 MLX_DIR = mlx_mac
 MLX_LIB = $(MLX_DIR)/libmlx.dylib
 MLX_SRC = $(wildcard $(MLX_DIR)/*.swift $(MLX_DIR)/*.c)
 LDLIBS = -Wl,-rpath,@executable_path/mlx_mac
 else
-SRCS += src/mlx_context_linux.c
+ENGINE_SRCS += src/engine/platform/mlx_context_linux.c
 MLX_DIR = mlx_linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_SRC = $(wildcard $(MLX_DIR)/*.c) $(MLX_DIR)/Makefile.mk $(MLX_DIR)/configure

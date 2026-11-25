@@ -19,6 +19,15 @@ Use W e S para avançar e recuar, A e D para se deslocar lateralmente e as setas
 
 O arquivo `.cub` define as texturas XPM das quatro faces com `NO`, `SO`, `WE` e `EA`, e as cores RGB do chão e do teto com `F` e `C`. Os caminhos relativos das texturas partem do diretório de execução. O mapa vem por último, fechado por paredes `1`, com espaços transitáveis `0` e exatamente um ponto de partida `N`, `S`, `E` ou `W`.
 
+## Divisão do projeto
+
+| Frente | Pasta | Responsabilidade |
+| --- | --- | --- |
+| Cena e validação | `src/scene/` | Ler o `.cub`, validar as diretivas e o mapa, definir a posição e a orientação iniciais e liberar os dados da cena. |
+| Motor e interação | `src/engine/` | Controlar o jogador, renderizar paredes e texturas e gerenciar a janela. O código fica em `controls/`, `render/` e `platform/`, respectivamente. |
+
+Cada pessoa pode assumir uma frente. O ponto de integração em `src/main.c` chama `parse_cub` para preencher o estado compartilhado definido em `includes/cub3d.h` e inicia o motor com a cena validada. A cena lê os caminhos das texturas, e o motor carrega os XPMs na MiniLibX.
+
 ## Recursos
 
 - Lode Vandevenne, *Raycasting Tutorial*.
